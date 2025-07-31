@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+theme {
+    --font-sans: "Inter", sans-serif;
+    --color-accent:#FF6B35;
+
+}
+
+body {
+  background-color: #FFF9F2;
+  color: #333333;
+    font-family: "Playfair Display SC", serif;
+  font-weight: 400;
+  font-style: normal;
+}

@@ -20,7 +20,7 @@ function App() {
     setData(null);
 
     try {
-      const response = await fetch("http://localhost:3000/word-service", {
+      const response = await fetch("https://dictionary-backend-production-d792.up.railway.app/word-service", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

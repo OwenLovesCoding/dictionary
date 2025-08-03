@@ -6,93 +6,197 @@ import sendIcon from "../src/assets/send.png"
 import books from "../src/assets/books.png"
 
 function App() {
-
   const [word, setWord] = useState("");
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
- async function getWordMeaning() {
-  console.log("Searching for word:", word);
-  setLoading(true);
+  async function getWordMeaning() {
+    if (!word.trim()) return;
+    
+    console.log("Searching for word:", word);
+    setLoading(true);
+    setError(null);
+    setData(null);
 
-  try {
-    const mainData = await fetch("http://localhost:3000/word-service", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // ✅ Important
-      },
-      body: JSON.stringify({ word }),
-    });
+    try {
+      const response = await fetch("http://localhost:3000/word-service", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ word }),
+      });
 
-    if (mainData.ok) {
-      const res = await mainData.json();
-      console.log("Meaning received:", res);
-      setData(res);
-    } else {
-      console.log("Failed to fetch word meaning:", mainData.status);
-      setData({});
+      if (response.ok) {
+        const res = await response.json();
+        if (res && res.meanings) {
+          setData(res);
+          // console.log("Meaning received:", res);
+        } else {
+          setError({ message: "No definitions found" });
+        }
+      } else {
+        setError({ message: "Failed to fetch word meaning" });
+      }
+    } catch (err) {
+      // console.error("Error fetching word meaning:", err);
+      setError({ message: "No meaning found..." });
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    console.error("Error fetching word meaning:", err);
-    setData(err);
-  } finally {
-    setLoading(false)
   }
-}
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      getWordMeaning();
+    }
+  };
 
   return (
-    <div className='overflow-x-hidden min-h-screen font-sans flex flex-col justify-between'>
-      <div className='flex lg:justify-between px-2 shadow-sm items-center'>
-        <img alt='logo' src={logo} className='size-7 md:size-10 lg:size-7'/>
-        <p className='text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold'>Pen-Ultman</p>
-        <div className='hidden lg:flex items-center gap-x-2 group translate-y-2'>
-          <p className='opacity-0 -z-10 translate-x-[100px] group-hover:translate-none group-hover:opacity-100 transition-all duration-500 ease-in-out'>
-            Follow Me 
-            </p>
-          <img alt='github logo' src={github} className='lg:size-7 bg-black/30 animate-bounce github'/>
+    <div className='min-h-screen font-sans flex flex-col bg-gray-50'>
+      {/* Header */}
+      <header className='flex justify-between items-center px-4 py-3 bg-white shadow-sm'>
+        <div className='flex items-center gap-2'>
+          <img alt='logo' src={logo} className='w-8 h-8'/>
+          <h1 className='text-xl font-bold text-gray-800'>Pen-Ultman</h1>
         </div>
-      </div>
+        <a 
+          href="https://github.com/owenlovescoding" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className='flex items-center gap-1 hover:opacity-80 transition-opacity'
+        >
+          <span className='hidden md:inline text-sm text-gray-600'>Follow Me</span>
+          <img alt='github logo' src={github} className='w-6 h-6'/>
+        </a>
+      </header>
 
-      {/* BODY */}
-      <div className='w-full md:w-3/4 2xl:w-2/4 4xl:w-1/4 mx-auto flex flex-col items-center'>
+      {/* Main Content */}
+      <main className='flex-1 container mx-auto px-4 py-8 max-w-4xl'>
+        <div className='text-center mb-10'>
+          <div className='inline-block bg-white px-3 py-1 rounded-lg shadow-sm mb-4'>
+            <p className='text-sm font-medium text-indigo-600'>✔✔100DaysOfBeauty</p>
+          </div>
 
-<div className='text-center relative'>
-  <div className='ring-4 inline-block m-2 p-1 ring-neutral-300'>
-        <p className='bg-[#fff] p-1 rounded-md'>✔✔100DaysOfBeauty</p>
-      </div>
+          <div className='flex justify-center items-end gap-2 mb-2'>
+            <h1 className='text-4xl md:text-5xl font-bold text-gray-800'>DICTIONARY</h1>
+            <img alt='stack of books' src={books} className='w-12 h-12 md:w-16 md:h-16'/>
+          </div>
+          <p className='text-gray-600'>Simple Dictionary Application</p>
+        </div>
 
-<div className='flex items-center gap-x-2'>
-        <h1 className='text-center text-lg md:text-4xl lg:text54xl xl:text-6xl font-bold'>DICTIONARY</h1>
-<img alt='stack of books' src={books} className='size-20 translate-y-5'/>
-</div>
-     
-     <p className='mt-4'>Simple Dictionary Application</p>
-      {/* <div className='border-l-2 absolute -z-10 w-[50px] h-[50px] hidden lg:flex top-0 rounded-full left-0 origin-center animate-spin'></div>
-      <div className='border-r-2 hidden lg:flex absolute -z-10 w-[50px] h-[50px] top-[50px] right-0 rounded-full origin-center animate-spin'></div> */}
-      </div>
+        {/* Search Box */}
+        <div className='bg-white rounded-lg shadow-md p-6 mb-8'>
+          <h2 className='font-semibold text-center text-xl mb-4 text-gray-700'>English Dictionary</h2>
+          
+          <div className='flex w-full items-center gap-2 mb-2'>
+            <input 
+              value={word}
+              onChange={(e) => setWord(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className='flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500'
+              placeholder='Enter word here'
+              disabled={loading}
+            />
+            <button 
+              onClick={getWordMeaning}
+              disabled={loading || !word.trim()}
+              className={`p-3 rounded-lg ${loading || !word.trim() ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'} transition-colors`}
+            >
+              <img alt='send icon' src={sendIcon} className='w-5 h-5'/>
+            </button>
+          </div>
+          <p className='text-center text-sm text-gray-500 italic'>
+            Type any existing word and press enter to get meaning, example, synonyms, etc
+          </p>
+        </div>
 
+        {/* Results Section */}
+        {loading && (
+          <div className='text-center py-8'>
+            <div className='inline-block rounded-full animate-spin h-8 w-8 border-t-2 border-b-2 border-gray-600'></div>
+          </div>
+        )}
 
+        {error && (
+          <div className='bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded'>
+            <div className='flex items-center'>
+              <div className='flex-shrink-0'>
+                <svg className='h-5 w-5 text-red-500' viewBox='0 0 20 20' fill='currentColor'>
+                  <path fillRule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z' clipRule='evenodd' />
+                </svg>
+              </div>
+              <div className='ml-3'>
+                <p className='text-sm text-red-700'>{error.message}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
-{/* DICTIONARY BOX */}
-    <div className='ring-[1px] p-2 w-9/10 md:w-3/4 2xl:w-2/4 mt-6 md:mt-8 lg:mt-10 box'>
+        {data && (
+          <div className='bg-white rounded-lg shadow-md p-6'>
+            <div className='flex items-center gap-4 mb-6'>
+              <h2 className='text-2xl font-bold text-gray-800 capitalize'>{data.word}</h2>
+              {data.partOfSpeech && (
+                <span className='px-3 py-1 bg-indigo-100 text-indigo-800 text-sm font-medium rounded-full'>
+                  {data.partOfSpeech}
+                </span>
+              )}
+            </div>
 
-        <h2 className='font-semibold text-center text-xl'>English Dictionary</h2>
+            {data.image && (
+              <div className='mb-6'>
+                <img 
+                  alt={data.word} 
+                  src={data.image} 
+                  className='w-full max-h-64 object-cover lg:object-cover rounded-lg border border-gray-200'
+                />
+              </div>
+            )}
 
-<div className='flex w-full mx-auto mt-2 items-center gap-x-[4px] justify-center'>
-<input 
-value={word}
-onChange={(inp) => setWord(inp.target.value)}
-className='p-2 text-lg rounded-md w-3/4 bg-white shadow-sm hover:shadow-zinc-400 focus:shadow-zinc-700 focus:ring-0 focus:outline-offset-0 transition duration-500 ease-in-out' placeholder='Enter word here'/>
-<img 
-onClick={getWordMeaning}
-alt='send icon' src={sendIcon} className='size-6 hover:bg-[#FF6B35] shadow-[#FF6B35] p-[4px] rounded- shadow-sm transition ease-in-out duration-300'/>
-</div>
-<p className='text-center mt-4 italic'>Type any existing word and press enter to get meaning, example, synonyms, etc</p>
-    </div>
-</div>      
+            <div className='space-y-6'>
+              {data.meanings && (
+                <div>
+                  <h3 className='text-lg font-semibold text-gray-700 mb-2'>Definition</h3>
+                  <p className='text-gray-700 italic'>"{data.meanings}"</p>
+                </div>
+              )}
 
-      <div></div>
+              {data.synonyms && data.synonyms.length > 0 && (
+                <div>
+                  <h3 className='text-lg font-semibold text-gray-700 mb-2'>Synonyms</h3>
+                  <div className='flex flex-wrap gap-2'>
+                    {data.synonyms.map((synonym, index) => (
+                      <span key={index} className='px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full'>
+                        {synonym}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {data.antonyms && data.antonyms.length > 0 && (
+                <div>
+                  <h3 className='text-lg font-semibold text-gray-700 mb-2'>Antonyms</h3>
+                  <div className='flex flex-wrap gap-2'>
+                    {data.antonyms.map((antonym, index) => (
+                      <span key={index} className='px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full'>
+                        {antonym}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className='py-4 text-center text-sm text-gray-500 border-t border-gray-200'>
+        <p>© {new Date().getFullYear()} Pen-Ultman Dictionary App</p>
+      </footer>
     </div>
   )
 }

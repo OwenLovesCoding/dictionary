@@ -5,6 +5,9 @@ import github from "../src/assets/github.png"
 import sendIcon from "../src/assets/send.png"
 import books from "../src/assets/books.png"
 
+const apiKey = import.meta.env.VITE_API_URL;
+// console.log(apiKey);
+
 function App() {
   const [word, setWord] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,13 +17,13 @@ function App() {
   async function getWordMeaning() {
     if (!word.trim()) return;
     
-    console.log("Searching for word:", word);
+    // console.log("Searching for word:", word);
     setLoading(true);
     setError(null);
     setData(null);
 
     try {
-      const response = await fetch("https://dictionary-backend-production-d792.up.railway.app/word-service", {
+      const response = await fetch(`${apiKey}/word-service`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

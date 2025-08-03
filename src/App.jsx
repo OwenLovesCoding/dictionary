@@ -105,9 +105,9 @@ function App() {
             <button 
               onClick={getWordMeaning}
               disabled={loading || !word.trim()}
-              className={`p-3 rounded-lg ${loading || !word.trim() ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'} transition-colors`}
+              className={`p-[4px] rounded-lg ${loading || !word.trim() ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'} transition-colors`}
             >
-              <img alt='send icon' src={sendIcon} className='w-5 h-5'/>
+              <img alt='send icon' src={sendIcon} className=' w-4 h-4'/>
             </button>
           </div>
           <p className='text-center text-sm text-gray-500 italic'>

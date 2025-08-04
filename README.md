@@ -1,12 +1,48 @@
-# React + Vite
+# 📚 Dictionary App (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive dictionary web application built with **React.js**. This app allows users to search for English words and view their definitions, phonetics, parts of speech, example usage, and more. It is connected to a powerful backend built with **NestJS** for word processing and API responses.
 
-Currently, two official plugins are available:
+<br>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Live Demo
 
-## Expanding the ESLint configuration
+👉 [View Live App](https://dictionary-three-liart.vercel.app/) 
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🧠 Features
+
+- 🔎 Search for any English word
+- 📖 Get definitions, related image, examples, synonyms, and parts of speech
+- ⚡ Fast and responsive UI
+- 🔌 Connected to a custom-built NestJS backend
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend:
+- [React.js](https://reactjs.org/)
+- [Vite](https://vitejs.dev/) 
+- [Tailwind CSS](https://tailwindcss.com/) 
+
+### Backend (powered by):
+- [NestJS](https://nestjs.com/)
+- Hosted on [Railway](https://railway.app/)
+
+---
+
+## 📁 Folder Structure
+
+```bash
+dictionary/
+│
+├── public/             # Static files
+├── src/          
+│   ├── assets/         # Images and icons
+│   ├── App.tsx         # Main app wrapper
+│   ├── main.tsx        # Entry point
+│   └── ...
+├── .env                # Environment variables
+├── package.json
+└── README.md
